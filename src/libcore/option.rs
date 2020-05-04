@@ -1388,6 +1388,15 @@ impl<'a, T> From<&'a Option<T>> for Option<&'a T> {
 
 #[stable(feature = "option_ref_from_ref_option", since = "1.30.0")]
 impl<'a, T> From<&'a mut Option<T>> for Option<&'a mut T> {
+    /// Converts from &mut Option<T> to Option<&mut T>
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let mut s = Some(String::from("Hello, Rustaceans!"));
+    /// let o: Option<&mut String> = Option::from(&mut s);
+    /// assert_eq!(Some(&mut String::from("Hello, Rustaceans!")), o);
+    /// ```
     fn from(o: &'a mut Option<T>) -> Option<&'a mut T> {
         o.as_mut()
     }
