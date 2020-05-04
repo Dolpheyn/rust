@@ -1357,13 +1357,13 @@ impl<'a, T> IntoIterator for &'a mut Option<T> {
 
 #[stable(since = "1.12.0", feature = "option_from")]
 impl<T> From<T> for Option<T> {
-    /// Converts from <T> to Option<T>
+    /// Copies val to a new Option::Some
     ///
     /// # Examples
     ///
     /// ```
-    /// let o = Option::from("Hello, Rustaceans!");
-    /// assert_eq!(Some("Hello, Rustaceans!"), o);
+    /// let o: Option<u8> = Option::from(67);
+    /// assert_eq!(Some(67), o);
     /// ```
     fn from(val: T) -> Option<T> {
         Some(val)
@@ -1374,11 +1374,20 @@ impl<T> From<T> for Option<T> {
     /// Converts from &Option<T> to Option<&T>
     ///
     /// # Examples
+    /// Converts an `Option<`[`String`]`>` into an `Option<`[`usize`]`>`, preserving the original.
+    /// The [`map`] method takes the `self` argument by value, consuming the original,
+    /// so this technique uses `as_ref` to first take an `Option` to a reference
+    /// to the value inside the original.
+    ///
+    /// [`map`]: enum.Option.html#method.map
+    /// [`String`]: ../../std/string/struct.String.html
+    /// [`usize`]: ../../std/primitive.usize.html
     ///
     /// ```
-    /// let s = Some(String::from("Hello, Rustaceans!"));
-    /// let o: Option<&String> = Option::from(&s);
-    /// assert_eq!(Some(&String::from("Hello, Rustaceans!")), o);
+    /// let s: Option<String> = Some(String::from("Hello, Rustaceans!"));
+    /// let o: Option<usize> = Option::from(&s).map(|ss: &String| ss.len());
+    /// println!("Can still print s: {}", s);
+    /// assert_eq!(o, Some(18));
     /// ```
 impl<'a, T> From<&'a Option<T>> for Option<&'a T> {
     fn from(o: &'a Option<T>) -> Option<&'a T> {
@@ -1393,9 +1402,13 @@ impl<'a, T> From<&'a mut Option<T>> for Option<&'a mut T> {
     /// # Examples
     ///
     /// ```
-    /// let mut s = Some(String::from("Hello, Rustaceans!"));
+    /// let mut s = Some(String::from("Hello"));
     /// let o: Option<&mut String> = Option::from(&mut s);
-    /// assert_eq!(Some(&mut String::from("Hello, Rustaceans!")), o);
+    /// match o {
+    ///     Some(t) => *t = String::from("Hello, Rustaceans!"),
+    ///     None => (),
+    /// }
+    /// assert_eq!(s, Some(String::from("Hello, Rustaceans!")));
     /// ```
     fn from(o: &'a mut Option<T>) -> Option<&'a mut T> {
         o.as_mut()
