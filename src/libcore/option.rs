@@ -1357,6 +1357,14 @@ impl<'a, T> IntoIterator for &'a mut Option<T> {
 
 #[stable(since = "1.12.0", feature = "option_from")]
 impl<T> From<T> for Option<T> {
+    /// Converts from <T> to Option<T>
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let o = Option::from("Hello, Rustaceans!");
+    /// assert_eq!(Some("Hello, Rustaceans!"), o);
+    /// ```
     fn from(val: T) -> Option<T> {
         Some(val)
     }
