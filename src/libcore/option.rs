@@ -1371,6 +1371,15 @@ impl<T> From<T> for Option<T> {
 }
 
 #[stable(feature = "option_ref_from_ref_option", since = "1.30.0")]
+    /// Converts from &Option<T> to Option<&T>
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let s = Some(String::from("Hello, Rustaceans!"));
+    /// let o: Option<&String> = Option::from(&s);
+    /// assert_eq!(Some(&String::from("Hello, Rustaceans!")), o);
+    /// ```
 impl<'a, T> From<&'a Option<T>> for Option<&'a T> {
     fn from(o: &'a Option<T>) -> Option<&'a T> {
         o.as_ref()
